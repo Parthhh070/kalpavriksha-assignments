@@ -30,7 +30,7 @@ void createUser() {
   
 
     printf("Enter Id:");
-    scanf("%d" , user.id);
+    scanf("%d" , &user.id);
 
     printf("Enter Name: ");
     scanf("%s", user.name);
@@ -168,3 +168,4 @@ int main() {
         }
     }
 }
+
