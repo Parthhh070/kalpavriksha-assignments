@@ -5,30 +5,29 @@
 
 #define MAX 100
 
-
-void CheckExpression(const char *expression, int numbers[], char operators[], int *numCount, int *opCount);
-int evaluateExpression(int numbers[], char operators[], int numCount, int opCount);
+void CheckExpression(const char *expression, int numbers[], char operators[], int *numberCount, int *operatorCount);
+int evaluateExpression(int numbers[], char operators[], int numberCount, int operatorCount);
 
 int main() {
     char expression[MAX];
     printf("Enter expression: ");
     fgets(expression, MAX, stdin);
-
+    //variable names are changed
     int numbers[MAX];
     char operators[MAX];
-    int numCount = 0, opCount = 0;
+    int numberCount = 0, operatorCount = 0;
 
-    
-    CheckExpression(expression, numbers, operators, &numCount, &opCount);
-
-    int result = evaluateExpression(numbers, operators, numCount, opCount);
+    CheckExpression(expression, numbers, operators, &numberCount, &operatorCount);
+    int result = evaluateExpression(numbers, operators, numberCount, operatorCount);
     printf("Result: %d\n", result);
 
     return 0;
 }
 
-void CheckExpression(const char *expression, int numbers[], char operators[], int *numCount, int *opCount) {
+//code logic is written seperately
+void CheckExpression(const char *expression, int numbers[], char operators[], int *numberCount, int *operatorCount) {
     int i = 0;
+    //flag made for checking invalid operator occurence
     int expectNumber = 1; 
 
     while (expression[i]) {
@@ -43,7 +42,8 @@ void CheckExpression(const char *expression, int numbers[], char operators[], in
                 number = number * 10 + (expression[i] - '0');
                 i++;
             }
-            numbers[(*numCount)++] = number;
+            numbers[(*numberCount)++] = number;
+            //will tell that the number is seen 
             expectNumber = 0;
         } 
         else if (expression[i] == '+' || expression[i] == '-' || 
@@ -52,8 +52,9 @@ void CheckExpression(const char *expression, int numbers[], char operators[], in
                 printf("Error: Invalid operator placement near '%c'\n", expression[i]);
                 exit(0);
             }
-            operators[(*opCount)++] = expression[i];
+            operators[(*operatorCount)++] = expression[i];
             i++;
+            //will tell theat the next should be number
             expectNumber = 1;
         } 
         else if (expression[i] == '\n') {
@@ -71,8 +72,8 @@ void CheckExpression(const char *expression, int numbers[], char operators[], in
     }
 }
 
-int evaluateExpression(int numbers[], char operators[], int numCount, int opCount) {
-    for (int i = 0; i < opCount; i++) {
+int evaluateExpression(int numbers[], char operators[], int numberCount, int operatorCount) {
+    for (int i = 0; i < operatorCount; i++) {
         if (operators[i] == '*' || operators[i] == '/') {
             if (operators[i] == '*') {
                 numbers[i] *= numbers[i + 1];
@@ -83,25 +84,23 @@ int evaluateExpression(int numbers[], char operators[], int numCount, int opCoun
                 }
                 numbers[i] /= numbers[i + 1];
             }
-
-            for (int j = i + 1; j < numCount - 1; j++){
+            for (int j = i + 1; j < numberCount - 1; j++) {
                 numbers[j] = numbers[j + 1];
             }
-            for (int j = i; j < opCount - 1; j++){
-
+            for (int j = i; j < operatorCount - 1; j++) {
                 operators[j] = operators[j + 1];
             }
-            numCount--;
-            opCount--;
+
+            numberCount--;
+            operatorCount--;
             i--;
         }
     }
     int result = numbers[0];
-    for (int i = 0; i < opCount; i++) {
-        if (operators[i] == '+'){
+    for (int i = 0; i < operatorCount; i++) {
+        if (operators[i] == '+') {
             result += numbers[i + 1];
-        }
-        else{
+        } else {
             result -= numbers[i + 1];
         }
     }
