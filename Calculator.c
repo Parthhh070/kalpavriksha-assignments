@@ -5,10 +5,11 @@
 
 #define MAX 100
 
-void CheckExpression(const char *expression, int numbers[], char operators[], int *numberCount, int *operatorCount);
+void checkExpression(const char *expression, int numbers[], char operators[], int *numberCount, int *operatorCount);
 int evaluateExpression(int numbers[], char operators[], int numberCount, int operatorCount);
 
-int main() {
+int main() 
+{
     char expression[MAX];
     printf("Enter expression: ");
     fgets(expression, MAX, stdin);
@@ -17,7 +18,7 @@ int main() {
     char operators[MAX];
     int numberCount = 0, operatorCount = 0;
 
-    CheckExpression(expression, numbers, operators, &numberCount, &operatorCount);
+    checkExpression(expression, numbers, operators, &numberCount, &operatorCount);
     int result = evaluateExpression(numbers, operators, numberCount, operatorCount);
     printf("Result: %d\n", result);
 
@@ -25,7 +26,8 @@ int main() {
 }
 
 //code logic is written seperately
-void CheckExpression(const char *expression, int numbers[], char operators[], int *numberCount, int *operatorCount) {
+void checkExpression(const char *expression, int numbers[], char operators[], int *numberCount, int *operatorCount) 
+{
     int i = 0;
     //flag made for checking invalid operator occurence
     int expectNumber = 1; 
@@ -50,7 +52,7 @@ void CheckExpression(const char *expression, int numbers[], char operators[], in
                  expression[i] == '*' || expression[i] == '/') {
             if (expectNumber) {
                 printf("Error: Invalid operator placement near '%c'\n", expression[i]);
-                exit(0);
+                return;
             }
             operators[(*operatorCount)++] = expression[i];
             i++;
@@ -62,17 +64,18 @@ void CheckExpression(const char *expression, int numbers[], char operators[], in
         } 
         else {
             printf("Error: Invalid character '%c' in expression.\n", expression[i]);
-            exit(0);
+            return;
         }
     }
 
     if (expectNumber) {
         printf("Error: Expression cannot end with an operator.\n");
-        exit(0);
+        return;
     }
 }
 
-int evaluateExpression(int numbers[], char operators[], int numberCount, int operatorCount) {
+int evaluateExpression(int numbers[], char operators[], int numberCount, int operatorCount) 
+{
     for (int i = 0; i < operatorCount; i++) {
         if (operators[i] == '*' || operators[i] == '/') {
             if (operators[i] == '*') {
@@ -80,7 +83,7 @@ int evaluateExpression(int numbers[], char operators[], int numberCount, int ope
             } else {
                 if (numbers[i + 1] == 0) {
                     printf("Error: Division by zero.\n");
-                    exit(0);
+                    return -1;
                 }
                 numbers[i] /= numbers[i + 1];
             }
@@ -97,7 +100,8 @@ int evaluateExpression(int numbers[], char operators[], int numberCount, int ope
         }
     }
     int result = numbers[0];
-    for (int i = 0; i < operatorCount; i++) {
+    for (int i = 0; i < operatorCount; i++) 
+    {
         if (operators[i] == '+') {
             result += numbers[i + 1];
         } else {
@@ -107,3 +111,4 @@ int evaluateExpression(int numbers[], char operators[], int numberCount, int ope
 
     return result;
 }
+
