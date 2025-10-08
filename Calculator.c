@@ -1,6 +1,4 @@
 #include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
 #include <ctype.h>
 
 #define MAXIMUM_LENGTH 100
@@ -114,3 +112,4 @@ int calculateExpression(int numbers[], char operators[], int numberCount, int op
 
     return result;
 }
+
