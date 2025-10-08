@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <ctype.h>
+#include <stdlib.h>
 
 #define MAXIMUM_LENGTH 100
 
@@ -56,9 +57,10 @@ void checkExpression(const char *expression, int numbers[], char operators[], in
             if (invalidOperator == 1)
             {
                 printf("invalid operator placement! please try again");
-                return;
+                exit(0);
             }
             operators[(*operatorCount)++] = expression[index];
+            invalidOperator = 1;
             index++;
         }
         else if (expression[index] == '\n')
@@ -67,12 +69,12 @@ void checkExpression(const char *expression, int numbers[], char operators[], in
         }
         else{
             printf("Invalid character '%c' \n", expression[index]);
-            return;
+            exit(0);
         }
     }
     if(invalidOperator==1){
         printf("expresssion can't end with operator");
-        return;
+        exit(0);
     }
 }
 
@@ -112,4 +114,5 @@ int calculateExpression(int numbers[], char operators[], int numberCount, int op
 
     return result;
 }
+
 
