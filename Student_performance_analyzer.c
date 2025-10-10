@@ -13,6 +13,9 @@ char calculateGrade(float average);
 void printPerformance(char grade);
 void listOfRollNumber(int totalStudents);
 
+void inputStudentDetails(struct studentData *students, int totalStudents);
+void printStudentsDetails(struct studentData *students, int totalStudents);
+
 int main()
 {
     int TotalStudents;
@@ -21,9 +24,18 @@ int main()
     scanf("%d", &TotalStudents);
     struct studentData *students = malloc(TotalStudents * sizeof(struct studentData));
 
+    inputStudentDetails(students, TotalStudents);
+    printStudentsDetails(students,TotalStudents);
+
+    listOfRollNumber(TotalStudents);
+    free(students);
+    return 0;
+}
+
+void inputStudentDetails(struct studentData *students, int totalStudents){
     printf("enter the student details (roll number, name, marks1, marks2, marks3): ");
 
-    for(int index=0;index<TotalStudents;index++){
+    for(int index=0;index<totalStudents;index++){
         scanf("%d %s %d %d %d",
         &students[index].rollNumber,
         students[index].name,
@@ -32,7 +44,11 @@ int main()
          &students[index].marks[2]);
     }
 
-    for (int index = 0; index < TotalStudents; index++) {
+}
+
+void printStudentsDetails(struct studentData *students, int totalStudents){
+
+    for (int index = 0; index < totalStudents; index++) {
 
         printf("roll Number: %d\n", students[index].rollNumber);
         printf("Name: %s\n", students[index].name);
@@ -50,10 +66,6 @@ int main()
         printf("performance: ");
         printPerformance(grade);
     }
-
-    listOfRollNumber(TotalStudents);
-    free(students);
-    return 0;
 }
 
 int calculateTotal(int marks1, int marks2, int marks3){
