@@ -48,13 +48,13 @@ const char *roleName(int r){
 }
 
 
-float computePerformanceIndex(PlayerNode *p){
-    if(p->role==1){
-        return (p->battingAverage*p->strikeRate)/100.0;
-    } else if(p->role==2){
-          return (p->wickets * 2) + (100.0 - p->economyRate);
+float computePerformanceIndex(PlayerNode *player){
+    if(player->role==1){
+        return (player->battingAverage*player->strikeRate)/100.0;
+    } else if(player->role==2){
+          return (player->wickets * 2) + (100.0 - player->economyRate);
     } else {
-             return ((p->battingAverage * p->strikeRate) / 100.0) + (p->wickets * 2);
+             return ((player->battingAverage * player->strikeRate) / 100.0) + (player->wickets * 2);
              }
 }
 
@@ -68,26 +68,26 @@ int findTeamIndex(const char *name)
     return -1;
 }
 
-void insertPlayerSorted(team *team, PlayerNode *p){
-    int role = p->role;
+void insertPlayerSorted(team *team, PlayerNode *player){
+    int role = player->role;
     PlayerNode **head = &team->rolehead[role];
     PlayerNode *curr = *head;
 
-    if(*head==NULL || p->perfIndex> curr->perfIndex){
-        p->next = *head;
-        *head=p;
+    if(*head==NULL || player->perfIndex> curr->perfIndex){
+        player->next = *head;
+        *head=player;
     } else{
-        while(curr->next && curr->next->perfIndex >= p->perfIndex){
+        while(curr->next && curr->next->perfIndex >= player->perfIndex){
             curr=curr->next;
         }
-        p->next = curr->next;
-        curr->next=p;
+        player->next = curr->next;
+        curr->next=player;
     }
 
     team->totalPlayers++;
     if(role!=2){
         float total = team->avgBattingSR * (team->totalPlayers - 1);
-        team->avgBattingSR = (total + p->strikeRate) / team->totalPlayers;
+        team->avgBattingSR = (total + player->strikeRate) / team->totalPlayers;
     }
 
 }
@@ -108,26 +108,26 @@ void initializeTeams(team teamList[]){
 
 void loadPlayers(team teamList[]){
     for(int i=0;i<playerCount;i++){
-        PlayerNode *p= malloc(sizeof(PlayerNode));
-        if (p == NULL)
+        PlayerNode *player= malloc(sizeof(PlayerNode));
+        if (player== NULL)
         {
             printf("error in memory allocation try again!");
             exit(1);
         }
 
-        p->id = players[i].id;
-        strcpy(p->name, players[i].name);
-        p->role = getRoleCode(players[i].role);
-        p->totalRuns = players[i].totalRuns;
-        p->battingAverage = players[i].battingAverage;
-        p->strikeRate = players[i].strikeRate;
-        p->wickets = players[i].wickets;
-        p->economyRate = players[i].economyRate;
-        p->perfIndex = computePerformanceIndex(p);
-        p->next = NULL;
+        player->id = players[i].id;
+        strcpy(player->name, players[i].name);
+        player->role = getRoleCode(players[i].role);
+        player->totalRuns = players[i].totalRuns;
+        player->battingAverage = players[i].battingAverage;
+        player->strikeRate = players[i].strikeRate;
+        player->wickets = players[i].wickets;
+        player->economyRate = players[i].economyRate;
+        player->perfIndex = computePerformanceIndex(player);
+        player->next = NULL;
 
         int index = findTeamIndex(players[i].team);
-        insertPlayerSorted(&teamList[index],p);
+        insertPlayerSorted(&teamList[index],player);
 
     }
 }
@@ -152,23 +152,23 @@ void displayPlayersOfTeam(team teamList[]){
     printf("--------------------------------------------------------------------\n");
 
     for(int role=1;role<=3;role++){
-        PlayerNode *p = t->rolehead[role];
-         while (p)
+        PlayerNode *player = t->rolehead[role];
+         while (player)
         {
             printf("%-5d %-25s %-12s %-10d %-10.2f %-10.2f\n",
-            p->id, p->name, roleName(role),
-            p->totalRuns, p->battingAverage, p->strikeRate);
-            p = p->next;
+            player->id, player->name, roleName(role),
+            player->totalRuns, player->battingAverage, player->strikeRate);
+            player = player->next;
         }
     }
 
 }
 
 
-int cmpTeams(const void *a, const void *b)
+int cmpTeams(const void *team1, const void *team2)
 {
-    float x = ((team *)a)->avgBattingSR;
-    float y = ((team *)b)->avgBattingSR;
+    float x = ((team *)team1)->avgBattingSR;
+    float y = ((team *)team2)->avgBattingSR;
     return (y > x) - (y < x);
 }
 
